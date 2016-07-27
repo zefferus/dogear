@@ -1,7 +1,7 @@
 # Dogear
 
 [![Build Status](https://travis-ci.org/zefferus/dogear.svg?branch=master)](https://travis-ci.org/zefferus/dogear)
-[![Current Version](https://npmjs.com/package/dogear)](https://img.shields.io/npm/v/dogear.svg)
+[![Current Version](https://img.shields.io/npm/v/dogear.svg)](https://npmjs.com/package/dogear)
 
 A hapi plugin for sending request round trip metrics and server ops metrics to a statsd-compliant service (Datadog, InfluxDB's Telegraf, etc) and also exposes an expanded statsd client to the server.
 
