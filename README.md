@@ -3,7 +3,9 @@
 [![Build Status](https://travis-ci.org/zefferus/dogear.svg?branch=master)](https://travis-ci.org/zefferus/dogear)
 [![Current Version](https://npmjs.com/package/dogear)](https://img.shields.io/npm/v/dogear.svg)
 
-A hapi plugin for sending request round trip metrics and server ops metrics to a statsd-compliant service (Datadog, InfluxDB's Telegraf, etc) and also exposes an expanded statsd client to the server. This plugin started life as a fork of [hapi-statsd](http://npmjs.com/package/hapi-statsd) and has evolved since then. Thanks to Mac Angell for his hard work on hapi-statsd!
+A hapi plugin for sending request round trip metrics and server ops metrics to a statsd-compliant service (Datadog, InfluxDB's Telegraf, etc) and also exposes an expanded statsd client to the server.
+
+This plugin started life as a fork of [hapi-statsd](http://npmjs.com/package/hapi-statsd) and has evolved since then. Thanks to Mac Angell for his hard work on hapi-statsd!
 
 Development on **Dogear** is sponsored by [Sparo Labs](http://www.sparolabs.com/).
 
