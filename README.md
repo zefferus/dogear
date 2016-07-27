@@ -57,15 +57,34 @@ Optional initialization parameters for the statsd client:
 
 A template to use for the stat names to send to statsd. This can be any string that could include the following tokens that get replaced with their actual values:
 
-* `{path}` - the path that the request was routed to (e.g `'/users/{id}'`)
-* `{method}` - the HTTP verb used on the request (e.g. `'GET'`)
-* `{statusCode}` - the numerical status code of the response that the server sent back to the client (e.g. `200`)
+- `{path}` - the path that the request was routed to (e.g `'/users/{id}'`)
+- `{method}` - the HTTP verb used on the request (e.g. `'GET'`)
+- `{statusCode}` - the numerical status code of the response that the server sent back to the client (e.g. `200`)
 
 Defaults to `'{path}.{method}.{statusCode}'`
 
 ### `pathSeparator`
 
 A character or set of characters to replace the '/' (forward slash) characters in your URL path since forward slashes cannot be used in stat names. Defaults to `'_'`
+
+### `opsInterval`
+
+How often the server will send operational stats. Defaults to `1000`. If set to `null` or <= `0`, the plugin will not report operational metrics.
+
+### `opsMetrics`
+
+An array of strings represeting the operational metrics to report. Allowed values:
+
+- `os.load.1` - One minute average of server CPU load
+- `os.load.5` - Five minute average of server CPU load
+- `os.load.15` - Fifteen minute average of server CPU load
+- `proc.uptime` - Uptime for Hapi server process
+- `proc.mem.rss` - Amount of memory set aside for Hapi server process ([Learn More](http://stackoverflow.com/questions/12023359/what-do-the-return-values-of-node-js-process-memoryusage-stand-for))
+- `proc.mem.heapTotal` - Heap memory allocated for Hapi server process
+- `proc.mem.heapUsed` - Heap memory used by Hapi server process
+- `proc.delay` - Current event queue delay
+
+Defaults to an array containing all the above.
 
 
 ## Example

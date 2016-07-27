@@ -1,7 +1,7 @@
 {
 	"name": "dogear",
 	"description": "A hapi plugin for sending expanded metrics to statsd-compliant services",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"engines": {
 		"node": ">=4.0.0"
 	},
