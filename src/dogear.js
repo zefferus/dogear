@@ -11,7 +11,7 @@ const IsArray = require('lodash.isarray');
 const internals = {
   defaults: {
     statsdConfig: {
-      prefix: 'hapi'
+      prefix: 'hapi.'
     },
     pathSeparator: '_',
     template: '{path}.{method}.{statusCode}',

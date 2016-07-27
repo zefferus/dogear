@@ -42,7 +42,7 @@ Optional initialization parameters for the statsd client:
 
 - `host` - The host to send stats to `default: localhost`
 - `port` - The port to send stats to `default: 8125`
-- `prefix` - What to prefix each stat name with `default: 'hapi'`
+- `prefix` - What to prefix each stat name with `default: 'hapi.'`
 - `suffix` - What to suffix each stat name with `default: ''`
 - `globalize` - Expose this StatsD instance globally? `default: false`
 - `cacheDns` - Cache the initial dns lookup to *host* `default: false`
