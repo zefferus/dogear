@@ -1,0 +1,11 @@
+*~
+*.log
+*.tap
+node_modules
+coverage
+artifacts
+.nyc_output
+test/coverage*
+.DS*
+.idea
+.vscode

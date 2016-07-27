@@ -1,0 +1,57 @@
+{
+	"name": "dogear",
+	"description": "A hapi plugin for sending expanded metrics to statsd-compliant services",
+	"version": "1.0.0",
+	"engines": {
+		"node": ">=4.0.0"
+	},
+	"main": "src/index.js",
+	"scripts": {
+    "lint": "eslint src",
+    "test": "tap --cov --reporter=spec test/*.test.js",
+    "precoverage": "rimraf coverage",
+    "coverage": "tap --coverage-report=lcov"
+	},
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/zefferus/dogear"
+  },
+	"keywords": [
+		"hapi",
+		"plugin",
+		"statsd",
+		"graphite",
+		"metrics",
+		"instrumentation",
+		"stats",
+		"request",
+		"datadog",
+		"dogstatsd",
+		"influxdb",
+		"telegraf"
+	],
+	"author": "Brandon Belvin",
+	"license": "MIT",
+	"bugs": {
+    "url": "https://github.com/zefferus/dogear/issues"
+  },
+  "homepage": "https://github.com/zefferus/dogear#readme",
+	"dependencies": {
+		"hot-shots": "^4.1.1",
+		"hoek": "^4.0.2",
+		"oppsy": "^1.0.2",
+		"lodash.at": "^4.5.0",
+		"lodash.isarray": "^4.0.0"
+	},
+	"devDependencies": {
+		"hapi": "^13.0.0",
+		"babel-eslint": "^6.1.2",
+		"eslint": "^3.1.1",
+		"tap": "^6.2.0",
+		"rimraf": "^2.5.4",
+		"sinon": "^1.17.5"
+	},
+	"peerDependencies": {
+		"hapi": "^13.0.0"
+	}
+}
