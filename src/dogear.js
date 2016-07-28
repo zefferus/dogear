@@ -13,8 +13,6 @@ const internals = {
     statsdConfig: {
       prefix: 'hapi.'
     },
-    pathSeparator: '_',
-    template: '{path}.{method}.{statusCode}',
     opsInterval: 1000,
     opsMetrics: null
   },
@@ -82,10 +80,6 @@ function attachToServer(server) {
 
   const self = this;
 
-  const normalizePath = (path) => path.replace(/^\/+/, '')
-    .replace(/\//g, self._settings.pathSeparator);
-
-
   server.ext('onPreResponse', (request, reply) => {
     const msec = Date.now() - request.info.received;
 
@@ -104,14 +98,19 @@ function attachToServer(server) {
       request.response.output.statusCode :
       request.response.statusCode;
 
-    const statName = self._settings.template
-      .replace('{path}', normalizePath(path))
-      .replace('{method}', request.method.toUpperCase())
-      .replace('{statusCode}', statusCode)
-      .replace(/^[.]+/, '');
+    const tags = [
+      `path:${ path }`,
+      `method:${ request.method.toUpperCase() }`
+    ];
 
-    self.client.increment(statName);
-    self.client.timing(statName, msec);
+    if (statusCode) {
+      tags.push(`status:${ statusCode }`);
+
+      self.client.increment(`request.status.${ statusCode }`, tags);
+      self.client.increment('request.received', tags);
+    }
+
+    self.client.histogram('request.response_time', msec, tags);
 
     reply.continue();
   });

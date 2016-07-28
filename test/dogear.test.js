@@ -105,21 +105,22 @@ describe('Plugin reports on paths.', (tap) => {
   });
 
 
-  tap.test('Reports stats with no path in stat name.', (t) => {
+  tap.test('Reports stats for request.', (t) => {
 
-    t.plan(5);
+    t.plan(6);
 
     const client = server.statsd;
 
     const incSpy = sandbox.spy(client, 'increment');
-    const timingSpy = sandbox.spy(client, 'timing');
+    const timingSpy = sandbox.spy(client, 'histogram');
 
     server.inject('/', () => {
-      t.ok(incSpy.calledOnce);
+      t.ok(incSpy.calledTwice);
       t.ok(timingSpy.calledOnce);
 
-      t.equals(incSpy.getCall(0).args[0], 'GET.200');
-      t.equals(timingSpy.getCall(0).args[0], 'GET.200');
+      t.equals(incSpy.getCall(0).args[0], 'request.status.200');
+      t.equals(incSpy.getCall(1).args[0], 'request.received');
+      t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
       t.type(timingSpy.getCall(0).args[1], 'number');
 
       t.end();
@@ -127,22 +128,28 @@ describe('Plugin reports on paths.', (tap) => {
   });
 
 
-  tap.test('Reports stats with path in stat name.', (t) => {
+  tap.test('Reports stats with tags.', (t) => {
 
-    t.plan(5);
+    t.plan(8);
 
     const client = server.statsd;
 
     const incSpy = sandbox.spy(client, 'increment');
-    const timingSpy = sandbox.spy(client, 'timing');
+    const timingSpy = sandbox.spy(client, 'histogram');
 
     server.inject('/test/123', () => {
-      t.ok(incSpy.calledOnce);
+      t.ok(incSpy.calledTwice);
       t.ok(timingSpy.calledOnce);
 
-      t.equals(incSpy.getCall(0).args[0], 'test_{param}.GET.200');
-      t.equals(timingSpy.getCall(0).args[0], 'test_{param}.GET.200');
-      t.type(timingSpy.getCall(0).args[1], 'number');
+      const tags = incSpy.getCall(0).args[1];
+
+      t.type(tags, Array);
+      t.ok(tags.indexOf('path:/test/{param}') >= 0);
+      t.ok(tags.indexOf('method:GET') >= 0);
+      t.ok(tags.indexOf('status:200') >= 0);
+
+      t.strictSame(incSpy.getCall(1).args[1], tags);
+      t.strictSame(timingSpy.getCall(0).args[2], tags);
 
       t.end();
     });
@@ -151,19 +158,20 @@ describe('Plugin reports on paths.', (tap) => {
 
   tap.test('Reports stats with generic not found path.', (t) => {
 
-    t.plan(5);
+    t.plan(6);
 
     const client = server.statsd;
 
     const incSpy = sandbox.spy(client, 'increment');
-    const timingSpy = sandbox.spy(client, 'timing');
+    const timingSpy = sandbox.spy(client, 'histogram');
 
     server.inject('/wont/find/this', () => {
-      t.ok(incSpy.calledOnce);
+      t.ok(incSpy.calledTwice);
       t.ok(timingSpy.calledOnce);
 
-      t.equals(incSpy.getCall(0).args[0], '{notFound*}.GET.404');
-      t.equals(timingSpy.getCall(0).args[0], '{notFound*}.GET.404');
+      t.equals(incSpy.getCall(0).args[0], 'request.status.404');
+      t.equals(incSpy.getCall(1).args[0], 'request.received');
+      t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
       t.type(timingSpy.getCall(0).args[1], 'number');
 
       t.end();
@@ -173,12 +181,12 @@ describe('Plugin reports on paths.', (tap) => {
 
   tap.test('Reports stats with generic CORS path.', (t) => {
 
-    t.plan(5);
+    t.plan(6);
 
     const client = server.statsd;
 
     const incSpy = sandbox.spy(client, 'increment');
-    const timingSpy = sandbox.spy(client, 'timing');
+    const timingSpy = sandbox.spy(client, 'histogram');
 
     server.inject({
       method: 'OPTIONS',
@@ -187,12 +195,15 @@ describe('Plugin reports on paths.', (tap) => {
       },
       url: '/'
     }, () => {
-      t.ok(incSpy.calledOnce);
+      t.ok(incSpy.calledTwice);
       t.ok(timingSpy.calledOnce);
 
-      t.equals(incSpy.getCall(0).args[0], '{cors*}.OPTIONS.200');
-      t.equals(timingSpy.getCall(0).args[0], '{cors*}.OPTIONS.200');
-      t.type(timingSpy.getCall(0).args[1], 'number');
+      const tags = incSpy.getCall(0).args[1];
+
+      t.type(tags, Array);
+      t.ok(tags.indexOf('path:/{cors*}') >= 0);
+      t.ok(tags.indexOf('method:OPTIONS') >= 0);
+      t.ok(tags.indexOf('status:200') >= 0);
 
       t.end();
     });
@@ -201,19 +212,20 @@ describe('Plugin reports on paths.', (tap) => {
 
   tap.test('Does not change status code of a response.', (t) => {
 
-    t.plan(6);
+    t.plan(7);
 
     const client = server.statsd;
 
     const incSpy = sandbox.spy(client, 'increment');
-    const timingSpy = sandbox.spy(client, 'timing');
+    const timingSpy = sandbox.spy(client, 'histogram');
 
     server.inject('/err', (res) => {
-      t.ok(incSpy.calledOnce);
+      t.ok(incSpy.calledTwice);
       t.ok(timingSpy.calledOnce);
 
-      t.equals(incSpy.getCall(0).args[0], 'err.GET.500');
-      t.equals(timingSpy.getCall(0).args[0], 'err.GET.500');
+      t.equals(incSpy.getCall(0).args[0], 'request.status.500');
+      t.equals(incSpy.getCall(1).args[0], 'request.received');
+      t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
       t.type(timingSpy.getCall(0).args[1], 'number');
 
       t.equals(res.statusCode, 500);

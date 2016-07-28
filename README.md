@@ -53,20 +53,6 @@ Optional initialization parameters for the statsd client:
 - `telegraf` - Use Telegraf's StatsD line protocol, which is slightly different than the rest `default: false`
 - `errorHandler` - A function with one argument. It is called to handle various errors. `default: none`, errors are thrown/logger to console
 
-### `template`
-
-A template to use for the stat names to send to statsd. This can be any string that could include the following tokens that get replaced with their actual values:
-
-- `{path}` - the path that the request was routed to (e.g `'/users/{id}'`)
-- `{method}` - the HTTP verb used on the request (e.g. `'GET'`)
-- `{statusCode}` - the numerical status code of the response that the server sent back to the client (e.g. `200`)
-
-Defaults to `'{path}.{method}.{statusCode}'`
-
-### `pathSeparator`
-
-A character or set of characters to replace the '/' (forward slash) characters in your URL path since forward slashes cannot be used in stat names. Defaults to `'_'`
-
 ### `opsInterval`
 
 How often the server will send operational stats. Defaults to `1000`. If set to `null` or <= `0`, the plugin will not report operational metrics.
@@ -101,9 +87,20 @@ server.route({
 });
 ```
 
-would send an increment and timing stat to statsd with the following stat name (assuming all options are set to their defaults):
+would send increment stats to statsd with the following names:
 
-	hapi.test_{param}.GET.200
+	hapi.request.status.200
+	hapi.request.received
+
+and a timing stat named:
+
+  hapi.request.response_time
+
+if the statsd server supports tags, it will also receive the following tags (in addition to any global tags):
+
+  path:/test/{param}
+	method:GET
+	status:200
 
 As the [statsd client](https://npmjs.com/package/hot-shots) is also exposed to the hapi server, you can use any of its methods, e.g.:
 
@@ -111,6 +108,7 @@ As the [statsd client](https://npmjs.com/package/hot-shots) is also exposed to t
 server.statsd.increment('systemname.subsystem.value');
 server.statsd.gauge('what.you.gauge', 100);
 server.statsd.set('your.set', 200);
+server.statsd.histogram('timing.metric', 235, [ 'tags' ]);
 ```
 
 ## Version Compatibility
