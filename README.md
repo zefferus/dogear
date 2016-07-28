@@ -26,9 +26,9 @@ var server = new Hapi.Server();
 var dogearOptions = {}
 
 server.register({ register: require('dogear'), options: dogearOptions }, function (err) {
-	if (err) {
-		console.log('error', 'Failed loading plugin: dogear');
-	}
+  if (err) {
+    console.log('error', 'Failed loading plugin: dogear');
+  }
 });
 ```
 
@@ -79,28 +79,28 @@ A Hapi route configured like this:
 
 ```js
 server.route({
-	method: 'GET',
-	path: '/test/{param}',
-	handler: function(request, reply) {
-		reply('Success!');
-	}
+  method: 'GET',
+  path: '/test/{param}',
+  handler: function(request, reply) {
+    reply('Success!');
+  }
 });
 ```
 
 would send increment stats to statsd with the following names:
 
-	hapi.request.status.200
-	hapi.request.received
+    hapi.request.status.200
+    hapi.request.received
 
 and a timing stat named:
 
-  hapi.request.response_time
+    hapi.request.response_time
 
 if the statsd server supports tags, it will also receive the following tags (in addition to any global tags):
 
-  path:/test/{param}
-	method:GET
-	status:200
+    path:/test/{param}
+    method:GET
+    status:200
 
 As the [statsd client](https://npmjs.com/package/hot-shots) is also exposed to the hapi server, you can use any of its methods, e.g.:
 
