@@ -107,7 +107,7 @@ describe('Plugin reports on paths.', (tap) => {
 
   tap.test('Reports stats for request.', (t) => {
 
-    t.plan(6);
+    t.plan(8);
 
     const client = server.statsd;
 
@@ -119,7 +119,9 @@ describe('Plugin reports on paths.', (tap) => {
       t.ok(timingSpy.calledOnce);
 
       t.equals(incSpy.getCall(0).args[0], 'request.status.200');
+      t.equals(incSpy.getCall(0).args[1], 1);
       t.equals(incSpy.getCall(1).args[0], 'request.received');
+      t.equals(incSpy.getCall(1).args[1], 1);
       t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
       t.type(timingSpy.getCall(0).args[1], 'number');
 
@@ -141,14 +143,14 @@ describe('Plugin reports on paths.', (tap) => {
       t.ok(incSpy.calledTwice);
       t.ok(timingSpy.calledOnce);
 
-      const tags = incSpy.getCall(0).args[1];
+      const tags = incSpy.getCall(0).args[2];
 
       t.type(tags, Array);
       t.ok(tags.indexOf('path:/test/{param}') >= 0);
       t.ok(tags.indexOf('method:GET') >= 0);
       t.ok(tags.indexOf('status:200') >= 0);
 
-      t.strictSame(incSpy.getCall(1).args[1], tags);
+      t.strictSame(incSpy.getCall(1).args[2], tags);
       t.strictSame(timingSpy.getCall(0).args[2], tags);
 
       t.end();
@@ -198,7 +200,7 @@ describe('Plugin reports on paths.', (tap) => {
       t.ok(incSpy.calledTwice);
       t.ok(timingSpy.calledOnce);
 
-      const tags = incSpy.getCall(0).args[1];
+      const tags = incSpy.getCall(0).args[2];
 
       t.type(tags, Array);
       t.ok(tags.indexOf('path:/{cors*}') >= 0);
@@ -290,6 +292,32 @@ describe('Plugin reports ops.', (tap) => {
 
         server.stop({ timeout: 0 }).then(t.end);
       });
+    });
+  });
+
+
+  tap.test('Ignores unsupported ops metric.', (t) => {
+    t.plan(1);
+
+    const server = initServer();
+
+    server.register({
+      register: plugin,
+      options: {
+        statsdConfig: {
+          mock: true
+        },
+        opsInterval: 500,
+        opsMetrics: [ 'bad.op.metric' ]
+      }
+    })
+    .then(() => {
+
+      const plugin = server.plugins['dogear'];
+
+      t.notOk(plugin._ops);
+
+      server.stop({ timeout: 0 }).then(t.end);
     });
   });
 

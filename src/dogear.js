@@ -5,9 +5,6 @@ const Oppsy = require('oppsy');
 const Hoek = require('hoek');
 const At = require('lodash.at');
 
-// Array.isArray doesn't appear until Node 6
-const IsArray = require('lodash.isarray');
-
 const internals = {
   defaults: {
     statsdConfig: {
@@ -106,8 +103,8 @@ function attachToServer(server) {
     if (statusCode) {
       tags.push(`status:${ statusCode }`);
 
-      self.client.increment(`request.status.${ statusCode }`, tags);
-      self.client.increment('request.received', tags);
+      self.client.increment(`request.status.${ statusCode }`, 1, tags);
+      self.client.increment('request.received', 1, tags);
     }
 
     self.client.histogram('request.response_time', msec, tags);
@@ -117,7 +114,7 @@ function attachToServer(server) {
 
 
   if (self._settings.opsInterval > 0 &&
-    IsArray(self._settings.opsMetrics) && self._settings.opsMetrics.length) {
+    Array.isArray(self._settings.opsMetrics) && self._settings.opsMetrics.length) {
 
     const metrics = self._settings.opsMetrics.filter((val) =>
       internals.opsMetricTypes[val] !== undefined);
