@@ -1,7 +1,7 @@
 {
 	"name": "dogear",
 	"description": "A hapi plugin for sending expanded metrics to statsd-compliant services",
-	"version": "2.0.2",
+	"version": "2.0.3",
 	"engines": {
 		"node": ">=4.0.0"
 	},
@@ -43,7 +43,7 @@
 		"lodash.at": "^4.5.0"
 	},
 	"devDependencies": {
-		"hapi": "^13.0.0",
+		"hapi": "^14.0.0",
 		"babel-eslint": "^6.1.2",
 		"eslint": "^3.1.1",
 		"tap": "^6.2.0",
@@ -51,6 +51,6 @@
 		"sinon": "^1.17.5"
 	},
 	"peerDependencies": {
-		"hapi": "^13.0.0"
+		"hapi": ">=13.x.x"
 	}
 }
