@@ -2,19 +2,15 @@
 
 const Dogear = require('./dogear');
 
-exports.register = function setUpDogear(server, config, next) {
+exports.register = (server, options) => {
 
-  const dogear = new Dogear(config);
+  const dogear = new Dogear(options);
 
   dogear.attachToServer(server);
 
   server.expose(dogear);
 
   server.decorate('server', 'statsd', dogear.client);
-
-  return next();
 };
 
-exports.register.attributes = {
-  pkg: require('../package.json')
-};
+exports.name = require('../package.json').name;
