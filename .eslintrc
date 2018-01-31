@@ -6,10 +6,6 @@
     "es6": true
   },
 
-  "ecmaFeatures": {
-    "blockBindings": true
-  },
-
   "extends": "eslint:recommended",
 
   "rules": {

@@ -1,56 +1,56 @@
 {
-	"name": "dogear",
-	"description": "A hapi plugin for sending expanded metrics to statsd-compliant services",
-	"version": "2.0.3",
-	"engines": {
-		"node": ">=4.0.0"
-	},
-	"main": "src/index.js",
-	"scripts": {
+  "name": "dogear",
+  "description": "A hapi plugin for sending expanded metrics to statsd-compliant services",
+  "version": "2.0.3",
+  "engines": {
+    "node": ">=8"
+  },
+  "main": "src/index.js",
+  "scripts": {
     "lint": "eslint src",
     "test": "tap --cov --reporter=spec test/*.test.js",
     "precoverage": "rimraf coverage",
     "coverage": "tap --coverage-report=lcov"
-	},
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/zefferus/dogear"
   },
-	"keywords": [
-		"hapi",
-		"plugin",
-		"statsd",
-		"graphite",
-		"metrics",
-		"instrumentation",
-		"stats",
-		"request",
-		"datadog",
-		"dogstatsd",
-		"influxdb",
-		"telegraf"
-	],
-	"author": "Brandon Belvin",
-	"license": "MIT",
-	"bugs": {
+  "keywords": [
+    "hapi",
+    "plugin",
+    "statsd",
+    "graphite",
+    "metrics",
+    "instrumentation",
+    "stats",
+    "request",
+    "datadog",
+    "dogstatsd",
+    "influxdb",
+    "telegraf"
+  ],
+  "author": "Brandon Belvin",
+  "license": "MIT",
+  "bugs": {
     "url": "https://github.com/zefferus/dogear/issues"
   },
   "homepage": "https://github.com/zefferus/dogear#readme",
-	"dependencies": {
-		"hot-shots": "^4.1.1",
-		"hoek": "^4.0.2",
-		"oppsy": "^1.0.2",
-		"lodash.at": "^4.5.0"
-	},
-	"devDependencies": {
-		"hapi": "^14.0.0",
-		"babel-eslint": "^6.1.2",
-		"eslint": "^3.1.1",
-		"tap": "^6.2.0",
-		"rimraf": "^2.5.4",
-		"sinon": "^1.17.5"
-	},
-	"peerDependencies": {
-		"hapi": ">=13.x.x"
-	}
+  "dependencies": {
+    "hoek": "^5.0.2",
+    "hot-shots": "^5.0.0",
+    "lodash.at": "^4.5.0",
+    "oppsy": "^2.0.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^8.2.1",
+    "eslint": "^4.16.0",
+    "hapi": "^17.2.0",
+    "rimraf": "^2.5.4",
+    "sinon": "^4.2.2",
+    "tap": "^11.1.0"
+  },
+  "peerDependencies": {
+    "hapi": ">=17"
+  }
 }
