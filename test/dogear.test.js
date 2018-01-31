@@ -10,22 +10,19 @@ const plugin = require('../src/index');
 
 let sandbox;
 
-function initServer() {
-  const server = new Hapi.Server();
-  server.connection({ routes: { cors: true } });
+async function initServer() {
+  const server = new Hapi.server({ routes: { cors: true } });
 
-  const get = (request, reply) => {
-    reply('Success!');
+  const get = () => 'Success!';
+  const err = () => {
+    throw new Error();
   };
 
-  const err = (request, reply) => {
-    reply(new Error());
-  };
+  server.route({ method: ['GET', 'OPTIONS'], path: '/', handler: get, config: { cors: true } });
+  server.route({ method: 'GET', path: '/err', handler: err, config: { cors: true } });
+  server.route({ method: 'GET', path: '/test/{param}', handler: get, config: { cors: true } });
 
-  server.route({ method: [ 'GET', 'OPTIONS' ], path: '/', handler: get, config: {cors: true}});
-  server.route({ method: 'GET', path: '/err', handler: err, config: {cors: true} });
-  server.route({ method: 'GET', path: '/test/{param}', handler: get, config: {cors: true}});
-
+  await server.initialize();
   return server;
 }
 
@@ -48,11 +45,11 @@ describe('Plugin attaches.', (tap) => {
 
   let server;
 
-  tap.beforeEach(() => {
-    server = initServer();
+  tap.beforeEach(async () => {
+    server = await initServer();
 
     return server.register({
-      register: plugin,
+      plugin,
       options: {
         statsdConfig: {
           mock: true
@@ -85,11 +82,11 @@ describe('Plugin reports on paths.', (tap) => {
 
   let server;
 
-  tap.beforeEach(() => {
-    server = initServer();
+  tap.beforeEach(async () => {
+    server = await initServer();
 
     return server.register({
-      register: plugin,
+      plugin,
       options: {
         statsdConfig: {
           mock: true
@@ -105,7 +102,7 @@ describe('Plugin reports on paths.', (tap) => {
   });
 
 
-  tap.test('Reports stats for request.', (t) => {
+  tap.test('Reports stats for request.', async t => {
 
     t.plan(8);
 
@@ -114,23 +111,23 @@ describe('Plugin reports on paths.', (tap) => {
     const incSpy = sandbox.spy(client, 'increment');
     const timingSpy = sandbox.spy(client, 'histogram');
 
-    server.inject('/', () => {
-      t.ok(incSpy.calledTwice);
-      t.ok(timingSpy.calledOnce);
+    await server.inject('/');
 
-      t.equals(incSpy.getCall(0).args[0], 'request.status.200');
-      t.equals(incSpy.getCall(0).args[1], 1);
-      t.equals(incSpy.getCall(1).args[0], 'request.received');
-      t.equals(incSpy.getCall(1).args[1], 1);
-      t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
-      t.type(timingSpy.getCall(0).args[1], 'number');
+    t.ok(incSpy.calledTwice);
+    t.ok(timingSpy.calledOnce);
 
-      t.end();
-    });
+    t.equals(incSpy.getCall(0).args[0], 'request.status.200');
+    t.equals(incSpy.getCall(0).args[1], 1);
+    t.equals(incSpy.getCall(1).args[0], 'request.received');
+    t.equals(incSpy.getCall(1).args[1], 1);
+    t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
+    t.type(timingSpy.getCall(0).args[1], 'number');
+
+    t.end();
   });
 
 
-  tap.test('Reports stats with tags.', (t) => {
+  tap.test('Reports stats with tags.', async t => {
 
     t.plan(8);
 
@@ -139,26 +136,26 @@ describe('Plugin reports on paths.', (tap) => {
     const incSpy = sandbox.spy(client, 'increment');
     const timingSpy = sandbox.spy(client, 'histogram');
 
-    server.inject('/test/123', () => {
-      t.ok(incSpy.calledTwice);
-      t.ok(timingSpy.calledOnce);
+    await server.inject('/test/123');
 
-      const tags = incSpy.getCall(0).args[2];
+    t.ok(incSpy.calledTwice);
+    t.ok(timingSpy.calledOnce);
 
-      t.type(tags, Array);
-      t.ok(tags.indexOf('path:/test/{param}') >= 0);
-      t.ok(tags.indexOf('method:GET') >= 0);
-      t.ok(tags.indexOf('status:200') >= 0);
+    const tags = incSpy.getCall(0).args[2];
 
-      t.strictSame(incSpy.getCall(1).args[2], tags);
-      t.strictSame(timingSpy.getCall(0).args[2], tags);
+    t.type(tags, Array);
+    t.ok(tags.indexOf('path:/test/{param}') >= 0);
+    t.ok(tags.indexOf('method:GET') >= 0);
+    t.ok(tags.indexOf('status:200') >= 0);
 
-      t.end();
-    });
+    t.strictSame(incSpy.getCall(1).args[2], tags);
+    t.strictSame(timingSpy.getCall(0).args[2], tags);
+
+    t.end();
   });
 
 
-  tap.test('Reports stats with generic not found path.', (t) => {
+  tap.test('Reports stats with generic not found path.', async t => {
 
     t.plan(6);
 
@@ -167,21 +164,21 @@ describe('Plugin reports on paths.', (tap) => {
     const incSpy = sandbox.spy(client, 'increment');
     const timingSpy = sandbox.spy(client, 'histogram');
 
-    server.inject('/wont/find/this', () => {
-      t.ok(incSpy.calledTwice);
-      t.ok(timingSpy.calledOnce);
+    await server.inject('/wont/find/this');
 
-      t.equals(incSpy.getCall(0).args[0], 'request.status.404');
-      t.equals(incSpy.getCall(1).args[0], 'request.received');
-      t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
-      t.type(timingSpy.getCall(0).args[1], 'number');
+    t.ok(incSpy.calledTwice);
+    t.ok(timingSpy.calledOnce);
 
-      t.end();
-    });
+    t.equals(incSpy.getCall(0).args[0], 'request.status.404');
+    t.equals(incSpy.getCall(1).args[0], 'request.received');
+    t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
+    t.type(timingSpy.getCall(0).args[1], 'number');
+
+    t.end();
   });
 
 
-  tap.test('Reports stats with generic CORS path.', (t) => {
+  tap.test('Reports stats with generic CORS path.', async t => {
 
     t.plan(6);
 
@@ -190,29 +187,29 @@ describe('Plugin reports on paths.', (tap) => {
     const incSpy = sandbox.spy(client, 'increment');
     const timingSpy = sandbox.spy(client, 'histogram');
 
-    server.inject({
+    await server.inject({
       method: 'OPTIONS',
       headers: {
         Origin: 'http://test.domain.com'
       },
       url: '/'
-    }, () => {
-      t.ok(incSpy.calledTwice);
-      t.ok(timingSpy.calledOnce);
-
-      const tags = incSpy.getCall(0).args[2];
-
-      t.type(tags, Array);
-      t.ok(tags.indexOf('path:/{cors*}') >= 0);
-      t.ok(tags.indexOf('method:OPTIONS') >= 0);
-      t.ok(tags.indexOf('status:200') >= 0);
-
-      t.end();
     });
+
+    t.ok(incSpy.calledTwice);
+    t.ok(timingSpy.calledOnce);
+
+    const tags = incSpy.getCall(0).args[2];
+
+    t.type(tags, Array);
+    t.ok(tags.indexOf('path:/{cors*}') >= 0);
+    t.ok(tags.indexOf('method:OPTIONS') >= 0);
+    t.ok(tags.indexOf('status:200') >= 0);
+
+    t.end();
   });
 
 
-  tap.test('Does not change status code of a response.', (t) => {
+  tap.test('Does not change status code of a response.', async t => {
 
     t.plan(7);
 
@@ -221,19 +218,19 @@ describe('Plugin reports on paths.', (tap) => {
     const incSpy = sandbox.spy(client, 'increment');
     const timingSpy = sandbox.spy(client, 'histogram');
 
-    server.inject('/err', (res) => {
-      t.ok(incSpy.calledTwice);
-      t.ok(timingSpy.calledOnce);
+    const res = await server.inject('/err')
 
-      t.equals(incSpy.getCall(0).args[0], 'request.status.500');
-      t.equals(incSpy.getCall(1).args[0], 'request.received');
-      t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
-      t.type(timingSpy.getCall(0).args[1], 'number');
+    t.ok(incSpy.calledTwice);
+    t.ok(timingSpy.calledOnce);
 
-      t.equals(res.statusCode, 500);
+    t.equals(incSpy.getCall(0).args[0], 'request.status.500');
+    t.equals(incSpy.getCall(1).args[0], 'request.received');
+    t.equals(timingSpy.getCall(0).args[0], 'request.response_time');
+    t.type(timingSpy.getCall(0).args[1], 'number');
 
-      t.end();
-    });
+    t.equals(res.statusCode, 500);
+
+    t.end();
   });
 
 
@@ -243,82 +240,82 @@ describe('Plugin reports on paths.', (tap) => {
 
 describe('Plugin reports ops.', (tap) => {
 
-  tap.test('Starts listening to ops reports.', (t) => {
+  tap.test('Starts listening to ops reports.', async t => {
     t.plan(1);
 
-    const server = initServer();
+    const server = await initServer();
 
-    server.register({
-      register: plugin,
+    await server.register({
+      plugin,
       options: {
         statsdConfig: {
           mock: true
         },
         opsInterval: 500
       }
-    }).then(() => {
-
-      const plugin = server.plugins['dogear'];
-
-      t.ok(plugin._ops);
-
-      server.stop({ timeout: 0 }).then(t.end);
     });
+
+    const dogear = server.plugins['dogear'];
+
+    t.ok(dogear._ops);
+
+    await server.stop({ timeout: 0 });
+    t.end();
   });
 
 
-  tap.test('Report ops metrics.', (t) => {
-    t.plan(2);
+  tap.test('Report ops metrics.', async t => {
+    t.plan(3);
 
-    const server = initServer();
+    const server = await initServer();
 
-    server.register({
-      register: plugin,
+    await server.register({
+      plugin,
       options: {
         statsdConfig: {
           mock: true
         },
-        opsInterval: 500
+        opsInterval: 10
       }
-    })
-    .then(() => {
-
-      const client = server.statsd;
-
-      sandbox.stub(client, 'gauge', (metric, value) => {
-
-        t.type(metric, 'string');
-        t.type(value, 'number');
-
-        server.stop({ timeout: 0 }).then(t.end);
-      });
     });
+
+    const client = server.statsd;
+    const gaugeSpy = sandbox.spy(client, 'gauge');
+
+    // wait for the first data sample by oppsy
+    await new Promise(resolve => setTimeout(resolve, 20));
+
+    t.ok(gaugeSpy.called);
+    t.type(gaugeSpy.getCall(0).args[0], 'string');
+    t.type(gaugeSpy.getCall(0).args[1], 'number');
+
+    await server.stop({ timeout: 0 });
+    t.end();
   });
 
 
-  tap.test('Ignores unsupported ops metric.', (t) => {
+  tap.test('Ignores unsupported ops metric.', async t => {
     t.plan(1);
 
-    const server = initServer();
+    const server = await initServer();
 
-    server.register({
-      register: plugin,
+    await server.register({
+      plugin,
       options: {
         statsdConfig: {
           mock: true
         },
         opsInterval: 500,
-        opsMetrics: [ 'bad.op.metric' ]
+        opsMetrics: ['bad.op.metric']
       }
-    })
-    .then(() => {
-
-      const plugin = server.plugins['dogear'];
-
-      t.notOk(plugin._ops);
-
-      server.stop({ timeout: 0 }).then(t.end);
     });
+
+    const dogear = server.plugins['dogear'];
+
+    t.notOk(dogear._ops);
+
+    await server.stop({ timeout: 0 })
+    t.end();
   });
 
 
