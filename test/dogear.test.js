@@ -102,7 +102,7 @@ describe('Plugin reports on paths.', (tap) => {
   });
 
 
-  tap.test('Reports stats for request.', async t => {
+  tap.test('Reports stats for request.', async (t) => {
 
     t.plan(8);
 
@@ -127,7 +127,7 @@ describe('Plugin reports on paths.', (tap) => {
   });
 
 
-  tap.test('Reports stats with tags.', async t => {
+  tap.test('Reports stats with tags.', async (t) => {
 
     t.plan(8);
 
@@ -155,7 +155,7 @@ describe('Plugin reports on paths.', (tap) => {
   });
 
 
-  tap.test('Reports stats with generic not found path.', async t => {
+  tap.test('Reports stats with generic not found path.', async (t) => {
 
     t.plan(6);
 
@@ -178,7 +178,7 @@ describe('Plugin reports on paths.', (tap) => {
   });
 
 
-  tap.test('Reports stats with generic CORS path.', async t => {
+  tap.test('Reports stats with generic CORS path.', async (t) => {
 
     t.plan(6);
 
@@ -209,7 +209,7 @@ describe('Plugin reports on paths.', (tap) => {
   });
 
 
-  tap.test('Does not change status code of a response.', async t => {
+  tap.test('Does not change status code of a response.', async (t) => {
 
     t.plan(7);
 
@@ -240,7 +240,7 @@ describe('Plugin reports on paths.', (tap) => {
 
 describe('Plugin reports ops.', (tap) => {
 
-  tap.test('Starts listening to ops reports.', async t => {
+  tap.test('Starts listening to ops reports.', async (t) => {
     t.plan(1);
 
     const server = await initServer();
@@ -264,7 +264,7 @@ describe('Plugin reports ops.', (tap) => {
   });
 
 
-  tap.test('Report ops metrics.', async t => {
+  tap.test('Report ops metrics.', async (t) => {
     t.plan(3);
 
     const server = await initServer();
@@ -294,7 +294,7 @@ describe('Plugin reports ops.', (tap) => {
   });
 
 
-  tap.test('Ignores unsupported ops metric.', async t => {
+  tap.test('Ignores unsupported ops metric.', async (t) => {
     t.plan(1);
 
     const server = await initServer();
@@ -306,7 +306,7 @@ describe('Plugin reports ops.', (tap) => {
           mock: true
         },
         opsInterval: 500,
-        opsMetrics: ['bad.op.metric']
+        opsMetrics: [ 'bad.op.metric' ]
       }
     });
 
