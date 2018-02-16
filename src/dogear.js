@@ -77,11 +77,11 @@ function attachToServer(server) {
 
   const self = this;
 
-  server.ext('onPreResponse', (request, reply) => {
+  server.ext('onPreResponse', (request, h) => {
     const msec = Date.now() - request.info.received;
 
     let path = request._route.path;
-    const specials = request.connection._router.specials;
+    const specials = request._core.router.specials;
 
     if (request._route === specials.notFound.route) {
       path = '/{notFound*}';
@@ -109,7 +109,7 @@ function attachToServer(server) {
 
     self.client.histogram('request.response_time', msec, tags);
 
-    reply.continue();
+    return h.continue;
   });
 
 
