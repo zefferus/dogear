@@ -75,8 +75,6 @@ function close(cb) {
 internals.Dogear.prototype.attachToServer = attachToServer;
 function attachToServer(server) {
 
-  const self = this;
-
   server.ext('onPreResponse', (request, h) => {
     const msec = Date.now() - request.info.received;
 
@@ -87,7 +85,7 @@ function attachToServer(server) {
       path = '/{notFound*}';
     } else if (specials.options && request._route === specials.options.route) {
       path = '/{cors*}';
-    } else if (request._route.path === '/' && request._route.method === 'options'){
+    } else if (request._route.path === '/' && request._route.method === 'options') {
       path = '/{cors*}';
     }
 
@@ -103,43 +101,41 @@ function attachToServer(server) {
     if (statusCode) {
       tags.push(`status:${ statusCode }`);
 
-      self.client.increment(`request.status.${ statusCode }`, 1, tags);
-      self.client.increment('request.received', 1, tags);
+      this.client.increment(`request.status.${ statusCode }`, 1, tags);
+      this.client.increment('request.received', 1, tags);
     }
 
-    self.client.histogram('request.response_time', msec, tags);
+    this.client.histogram('request.response_time', msec, tags);
 
     return h.continue;
   });
 
+  if (this._settings.opsInterval > 0 &&
+    Array.isArray(this._settings.opsMetrics) && this._settings.opsMetrics.length) {
 
-  if (self._settings.opsInterval > 0 &&
-    Array.isArray(self._settings.opsMetrics) && self._settings.opsMetrics.length) {
-
-    const metrics = self._settings.opsMetrics.filter((val) =>
+    const metrics = this._settings.opsMetrics.filter((val) =>
       internals.opsMetricTypes[val] !== undefined);
 
     if (metrics.length > 0) {
-      self._ops = new Oppsy(server);
-      self._ops.start(self._settings.opsInterval);
+      this._ops = new Oppsy(server);
+      this._ops.start(this._settings.opsInterval);
 
       const dataPath = metrics.map((metric) => internals.opsMetricTypes[metric].path);
 
-      self._ops.on('ops', (data) => {
+      this._ops.on('ops', (data) => {
 
         const values = At(data, dataPath);
 
         for (let i = 0; i < metrics.length; i++) {
           const metricType = internals.opsMetricTypes[metrics[i]].type;
 
-          self.client[metricType](metrics[i], values[i]);
+          this.client[metricType](metrics[i], values[i]);
         }
       });
     }
   }
 
-
   server.ext('onPreStop', () => {
-    self.close();
+    this.close();
   });
 }

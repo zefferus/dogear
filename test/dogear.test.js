@@ -218,7 +218,7 @@ describe('Plugin reports on paths.', (tap) => {
     const incSpy = sandbox.spy(client, 'increment');
     const timingSpy = sandbox.spy(client, 'histogram');
 
-    const res = await server.inject('/err')
+    const res = await server.inject('/err');
 
     t.ok(incSpy.calledTwice);
     t.ok(timingSpy.calledOnce);
@@ -283,7 +283,7 @@ describe('Plugin reports ops.', (tap) => {
     const gaugeSpy = sandbox.spy(client, 'gauge');
 
     // wait for the first data sample by oppsy
-    await new Promise(resolve => setTimeout(resolve, 20));
+    await new Promise((resolve) => setTimeout(resolve, 20));
 
     t.ok(gaugeSpy.called);
     t.type(gaugeSpy.getCall(0).args[0], 'string');
@@ -314,7 +314,7 @@ describe('Plugin reports ops.', (tap) => {
 
     t.notOk(dogear._ops);
 
-    await server.stop({ timeout: 0 })
+    await server.stop({ timeout: 0 });
     t.end();
   });
 

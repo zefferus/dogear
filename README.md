@@ -7,7 +7,7 @@ A hapi plugin for sending request round trip metrics and server ops metrics to a
 
 This plugin started life as a fork of [hapi-statsd](http://npmjs.com/package/hapi-statsd) and has evolved since then. Thanks to Mac Angell for his hard work on hapi-statsd!
 
-Development on **Dogear** is sponsored by [Sparo Labs](http://www.sparolabs.com/).
+**NOTE:** Dogear 3.x.x works with Hapi 17 and above. Please continue to use 2.x.x if you require an earlier version of Hapi.
 
 ## Install
 
@@ -19,17 +19,18 @@ $ npm install --save dogear
 
 To install this plugin on your Hapi server, do something similar to this:
 
-```js
-var Hapi = require('hapi');
-var server = new Hapi.Server();
+```javascript
+const Hapi = require('hapi');
+const server = new Hapi.Server();
 
-var dogearOptions = {}
+const dogearOptions = {}
 
-server.register({ register: require('dogear'), options: dogearOptions }, function (err) {
-  if (err) {
-    console.log('error', 'Failed loading plugin: dogear');
-  }
+await server.register({
+  plugin: require('dogear'),
+  options: dogearOptions
 });
+
+await server.start();
 ```
 
 ## Configuration
@@ -77,13 +78,11 @@ Defaults to an array containing all the above.
 
 A Hapi route configured like this:
 
-```js
+```javascript
 server.route({
   method: 'GET',
   path: '/test/{param}',
-  handler: function(request, reply) {
-    reply('Success!');
-  }
+  handler: () => 'Success!'
 });
 ```
 
@@ -104,7 +103,7 @@ if the statsd server supports tags, it will also receive the following tags (in 
 
 As the [statsd client](https://npmjs.com/package/hot-shots) is also exposed to the hapi server, you can use any of its methods, e.g.:
 
-```js
+```javascript
 server.statsd.increment('systemname.subsystem.value');
 server.statsd.gauge('what.you.gauge', 100);
 server.statsd.set('your.set', 200);
@@ -113,7 +112,8 @@ server.statsd.histogram('timing.metric', 235, [ 'tags' ]);
 
 ## Version Compatibility
 
-Currently tested with Hapi 13.x.x on Node 4 and Node 6
+- Version 3: Currently tested with Hapi 17.x.x on Node 8
+- Version 2: Up to Hapi 16.x.x
 
 ## License
 
