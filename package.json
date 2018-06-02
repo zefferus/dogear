@@ -7,15 +7,15 @@
 	},
 	"main": "src/index.js",
 	"scripts": {
-    "lint": "eslint src",
-    "test": "tap --cov --reporter=spec test/*.test.js",
-    "precoverage": "rimraf coverage",
-    "coverage": "tap --coverage-report=lcov"
+		"lint": "eslint src",
+		"test": "tap --cov --reporter=spec test/*.test.js",
+		"precoverage": "rimraf coverage",
+		"coverage": "tap --coverage-report=lcov"
 	},
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/zefferus/dogear"
-  },
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/zefferus/dogear"
+	},
 	"keywords": [
 		"hapi",
 		"plugin",
@@ -33,9 +33,9 @@
 	"author": "Brandon Belvin",
 	"license": "MIT",
 	"bugs": {
-    "url": "https://github.com/zefferus/dogear/issues"
-  },
-  "homepage": "https://github.com/zefferus/dogear#readme",
+		"url": "https://github.com/zefferus/dogear/issues"
+	},
+	"homepage": "https://github.com/zefferus/dogear#readme",
 	"dependencies": {
 		"hot-shots": "^5.5.1",
 		"hoek": "^4.0.2",
@@ -51,6 +51,6 @@
 		"sinon": "^1.17.5"
 	},
 	"peerDependencies": {
-		"hapi": ">=13.x.x"
+		"hapi": ">=13.x.x <17"
 	}
 }
