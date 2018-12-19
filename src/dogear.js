@@ -139,7 +139,8 @@ function attachToServer(server) {
   }
 
 
-  server.ext('onPreStop', () => {
+  server.ext('onPreStop', (server, next) => {
     self.close();
+    next();
   });
 }
