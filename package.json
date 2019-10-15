@@ -37,20 +37,20 @@
   },
   "homepage": "https://github.com/zefferus/dogear#readme",
   "dependencies": {
-    "hoek": "^5.0.3",
+    "@hapi/hoek": "^6.2.4",
+    "@hapi/oppsy": "^2.1.2",
     "hot-shots": "^5.0.1",
-    "lodash.at": "^4.6.0",
-    "oppsy": "^2.0.0"
+    "lodash.at": "^4.6.0"
   },
   "devDependencies": {
+    "@hapi/hapi": "^17.9.0",
     "babel-eslint": "^8.2.1",
     "eslint": "^4.17.0",
-    "hapi": "^17.2.0",
     "rimraf": "^2.6.2",
-    "sinon": "^4.2.2",
+    "sinon": "^6.3.5",
     "tap": "^11.1.0"
   },
   "peerDependencies": {
-    "hapi": ">=17"
+    "@hapi/hapi": ">=17"
   }
 }

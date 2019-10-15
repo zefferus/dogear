@@ -20,7 +20,7 @@ $ npm install --save dogear
 To install this plugin on your Hapi server, do something similar to this:
 
 ```javascript
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 const server = new Hapi.Server();
 
 const dogearOptions = {}

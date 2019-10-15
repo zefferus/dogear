@@ -3,7 +3,7 @@
 const Tap = require('tap');
 const describe = Tap.test;
 
-const Hapi = require('hapi');
+const Hapi = require('@hapi/hapi');
 const Sinon = require('sinon');
 
 const plugin = require('../src/index');

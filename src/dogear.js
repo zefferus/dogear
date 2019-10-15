@@ -1,8 +1,8 @@
 'use strict';
 
 const StatsD = require('hot-shots');
-const Oppsy = require('oppsy');
-const Hoek = require('hoek');
+const Oppsy = require('@hapi/oppsy');
+const Hoek = require('@hapi/hoek');
 const At = require('lodash.at');
 
 const internals = {
