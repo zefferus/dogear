@@ -7,7 +7,10 @@ A hapi plugin for sending request round trip metrics and server ops metrics to a
 
 This plugin started life as a fork of [hapi-statsd](http://npmjs.com/package/hapi-statsd) and has evolved since then. Thanks to Mac Angell for his hard work on hapi-statsd!
 
-**NOTE:** Dogear 3.x.x works with Hapi 17 and above. Please continue to use 2.x.x if you require an earlier version of Hapi.
+**NOTE:**
+- Dogear 4.x.x works with the namespaced versions of hapi 17 and greater (@hapi/hapi).
+- Dogear 3.x.x works with hapi 17 and above.
+- Dogear 2.x.x works with earlier versions.
 
 ## Install
 
@@ -17,11 +20,11 @@ $ npm install --save dogear
 
 ## Usage
 
-To install this plugin on your Hapi server, do something similar to this:
+To install this plugin on your hapi server, do something similar to this:
 
 ```javascript
-const Hapi = require('@hapi/hapi');
-const server = new Hapi.Server();
+const hapi = require('@hapi/hapi');
+const server = new hapi.Server();
 
 const dogearOptions = {}
 
@@ -65,10 +68,10 @@ An array of strings represeting the operational metrics to report. Allowed value
 - `os.load.1` - One minute average of server CPU load
 - `os.load.5` - Five minute average of server CPU load
 - `os.load.15` - Fifteen minute average of server CPU load
-- `proc.uptime` - Uptime for Hapi server process
-- `proc.mem.rss` - Amount of memory set aside for Hapi server process ([Learn More](http://stackoverflow.com/questions/12023359/what-do-the-return-values-of-node-js-process-memoryusage-stand-for))
-- `proc.mem.heapTotal` - Heap memory allocated for Hapi server process
-- `proc.mem.heapUsed` - Heap memory used by Hapi server process
+- `proc.uptime` - Uptime for hapi server process
+- `proc.mem.rss` - Amount of memory set aside for hapi server process ([Learn More](http://stackoverflow.com/questions/12023359/what-do-the-return-values-of-node-js-process-memoryusage-stand-for))
+- `proc.mem.heapTotal` - Heap memory allocated for hapi server process
+- `proc.mem.heapUsed` - Heap memory used by hapi server process
 - `proc.delay` - Current event queue delay
 
 Defaults to an array containing all the above.
@@ -76,7 +79,7 @@ Defaults to an array containing all the above.
 
 ## Example
 
-A Hapi route configured like this:
+A hapi route configured like this:
 
 ```javascript
 server.route({
@@ -112,8 +115,9 @@ server.statsd.histogram('timing.metric', 235, [ 'tags' ]);
 
 ## Version Compatibility
 
-- Version 3: Currently tested with Hapi 17.x.x on Node 8
-- Version 2: Up to Hapi 16.x.x
+- Version 4: @hapi/hapi 17.x.x and higher
+- Version 3: Currently tested with hapi 17.x.x on Node 8
+- Version 2: Up to hapi 16.x.x
 
 ## License
 
