@@ -1,9 +1,9 @@
 {
   "name": "dogear",
   "description": "A hapi plugin for sending expanded metrics to statsd-compliant services",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "engines": {
-    "node": ">=8"
+    "node": ">=12"
   },
   "main": "src/index.js",
   "scripts": {
@@ -37,18 +37,18 @@
   },
   "homepage": "https://github.com/zefferus/dogear#readme",
   "dependencies": {
-    "@hapi/hoek": "^6.2.4",
-    "@hapi/oppsy": "^2.1.2",
-    "hot-shots": "^5.0.1",
+    "@hapi/hoek": "^9.0.4",
+    "@hapi/oppsy": "^3.0.0",
+    "hot-shots": "^7.4.2",
     "lodash.at": "^4.6.0"
   },
   "devDependencies": {
-    "@hapi/hapi": "^17.9.0",
-    "babel-eslint": "^8.2.1",
-    "eslint": "^4.17.0",
-    "rimraf": "^2.6.2",
-    "sinon": "^6.3.5",
-    "tap": "^11.1.0"
+    "@hapi/hapi": "^19.1.1",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^6.8.0",
+    "rimraf": "^3.0.2",
+    "sinon": "^9.0.2",
+    "tap": "^14.10.7"
   },
   "peerDependencies": {
     "@hapi/hapi": ">=17"
