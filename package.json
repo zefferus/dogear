@@ -51,6 +51,6 @@
     "tap": "^14.10.7"
   },
   "peerDependencies": {
-    "@hapi/hapi": ">=17"
+    "@hapi/hapi": ">=19"
   }
 }
