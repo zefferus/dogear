@@ -18,7 +18,7 @@ async function initServer() {
     throw new Error();
   };
 
-  server.route({ method: ['GET', 'OPTIONS'], path: '/', handler: get, config: { cors: true } });
+  server.route({ method: [ 'GET', 'OPTIONS' ], path: '/', handler: get, config: { cors: true } });
   server.route({ method: 'GET', path: '/err', handler: err, config: { cors: true } });
   server.route({ method: 'GET', path: '/test/{param}', handler: get, config: { cors: true } });
 
@@ -28,7 +28,7 @@ async function initServer() {
 
 
 Tap.beforeEach(() => {
-  sandbox = Sinon.sandbox.create();
+  sandbox = Sinon.createSandbox();
 
   return Promise.resolve();
 });

@@ -8,6 +8,7 @@ A hapi plugin for sending request round trip metrics and server ops metrics to a
 This plugin started life as a fork of [hapi-statsd](http://npmjs.com/package/hapi-statsd) and has evolved since then. Thanks to Mac Angell for his hard work on hapi-statsd!
 
 **NOTE:**
+- Dogear 5.x.x works with the namespaced versions of hapi 19 and greater (@hapi/hapi) and requires node v12 or greater.
 - Dogear 4.x.x works with the namespaced versions of hapi 17 and greater (@hapi/hapi).
 - Dogear 3.x.x works with hapi 17 and above.
 - Dogear 2.x.x works with earlier versions.
@@ -16,6 +17,8 @@ This plugin started life as a fork of [hapi-statsd](http://npmjs.com/package/hap
 
 ```bash
 $ npm install --save dogear
+#or
+$ yarn add dogear
 ```
 
 ## Usage
@@ -115,6 +118,7 @@ server.statsd.histogram('timing.metric', 235, [ 'tags' ]);
 
 ## Version Compatibility
 
+- Version 5: @hapi/hapi 19.x.x and higher on Node 12
 - Version 4: @hapi/hapi 17.x.x and higher
 - Version 3: Currently tested with hapi 17.x.x on Node 8
 - Version 2: Up to hapi 16.x.x
